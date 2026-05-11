@@ -13,10 +13,10 @@ const Navbar = () => {
         <NavLink to="/">Home</NavLink>
       </li>
       <li className="hover:bg-auto rounded-xl hover:bg-gray-900 px-3 py-1">
-        <NavLink to="/coverage">Features</NavLink>
+        <NavLink to="/dashboard">Dashboard</NavLink>
       </li>
       <li className="hover:bg-auto rounded-xl hover:bg-gray-900 px-3 py-1">
-        <NavLink to="/sendParcel">Dashboard</NavLink>
+        <NavLink to="/about">About</NavLink>
       </li>
     </>
   );
