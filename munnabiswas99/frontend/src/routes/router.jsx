@@ -4,6 +4,9 @@ import Home from "../pages/home/Home";
 import AuthLayout from "../layouts/AuthLayout";
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
+import NotFound from "../pages/404/NotFound";
+import DashboardLayout from "../layouts/DashboardLayout";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +17,10 @@ export const router = createBrowserRouter([
         index: true,
         Component: Home,
       },
+      {
+        path:"*",
+        Component: NotFound
+      }
     ],
   },
 
@@ -31,4 +38,11 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/dashboard",
+    element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+    children: [
+
+    ]
+  }
 ]);

@@ -3,9 +3,11 @@ import Logo from "../logo/Logo";
 import { GiCancel } from "react-icons/gi";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { NavLink } from "react-router";
+import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user, logOut } = useAuth();
 
   const links = (
     <>
@@ -21,6 +23,16 @@ const Navbar = () => {
     </>
   );
 
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        console.log("User Logout");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="my-2 rounded-xl shadow shadow-gray-950">
       {/* Desktop Menu */}
@@ -35,18 +47,35 @@ const Navbar = () => {
           <ul className="hidden md:flex">{links}</ul>
         </div>
         <div className="hidden md:flex gap-2">
-          <NavLink
-            to="/login"
-            className="rounded px-3 py-1 text-primary-text bg-mist-600"
-          >
-            SignIn
-          </NavLink>
-          <NavLink
-            to="/register"
-            className="rounded px-3 py-1 text-secondary-text bg-white"
-          >
-            SignUp
-          </NavLink>
+          {user ? (
+            <>
+              <NavLink className="rounded-full px-3 py-1 text-secondary-text bg-white">
+                <img src="" alt="profile" />
+              </NavLink>
+
+              <button
+                onClick={handleLogout}
+                className="rounded px-3 py-1 text-secondary-text bg-white"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className="rounded px-3 py-1 text-primary-text bg-mist-600"
+              >
+                SignIn
+              </NavLink>
+              <NavLink
+                to="/register"
+                className="rounded px-3 py-1 text-secondary-text bg-white"
+              >
+                SignUp
+              </NavLink>
+            </>
+          )}
         </div>
       </div>
 
@@ -65,13 +94,35 @@ const Navbar = () => {
         <ul className="flex flex-col gap-5">{links}</ul>
 
         <div className="flex gap-3 mt-10">
-          <NavLink className="rounded px-3 py-1 text-primary-text bg-mist-600">
-            SignIn
-          </NavLink>
+          {user ? (
+            <>
+              <NavLink className="rounded-full px-3 py-1 text-secondary-text bg-white">
+                <img src="/" alt="profile" />
+              </NavLink>
 
-          <NavLink className="rounded px-3 py-1 text-secondary-text bg-white">
-            SignUp
-          </NavLink>
+              <button
+                onClick={handleLogout}
+                className="rounded px-3 py-1 text-secondary-text bg-white"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className="rounded px-3 py-1 text-primary-text bg-mist-600"
+              >
+                SignIn
+              </NavLink>
+              <NavLink
+                to="/register"
+                className="rounded px-3 py-1 text-secondary-text bg-white"
+              >
+                SignUp
+              </NavLink>
+            </>
+          )}
         </div>
       </div>
     </div>

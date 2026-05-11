@@ -12,7 +12,7 @@ const CardSection = () => {
         understand and optimize.
       </h1>
       <motion.div
-        initial={{ opacity: 0, x:-400 }}
+        initial={{ opacity: 0, x:-100 }}
         transition={{duration: 2 }}
         whileInView={{opacity:1, x:0}}
         viewport={{ once: true}}

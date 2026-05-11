@@ -69,7 +69,7 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-black"
                 {...register("email", {
                   required: "Email is required",
                 })}
@@ -91,7 +91,7 @@ const Login = () => {
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-black"
                 {...register("password", {
                   required: "Password is required"
                 })}
@@ -107,7 +107,7 @@ const Login = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 transition text-white font-semibold py-3 rounded-xl mt-3"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl mt-3"
             >
               Login
             </button>
@@ -115,7 +115,7 @@ const Login = () => {
 
           {/* Footer */}
           <p className="text-center text-gray-500 text-sm mt-6">
-            Already have an account?
+            Do not have an account?
             <NavLink to="/register">
               {" "}
               <span className="text-green-600 font-medium cursor-pointer ml-1">
