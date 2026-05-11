@@ -1,10 +1,10 @@
 import React from 'react';
+import Logo from "../components/logo/Logo";
 import { Outlet } from 'react-router';
 
 const AuthLayout = () => {
     return (
-        <div>
-            This is AuthLayout
+        <div className=''>
             <Outlet/>
         </div>
     );
