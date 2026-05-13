@@ -4,9 +4,9 @@ import { NavLink } from 'react-router';
 
 const Logo = () => {
     return (
-        <NavLink to='/' className='w-fit flex gap-2 items-center border border-dashed py-1 px-2 rounded-2xl shadow-2xl'>
+        <NavLink to='/' className='w-fit  flex gap-2 items-center border border-white text-primary-text border-dashed py-1 px-2 rounded-2xl shadow-2xl'>
             <FaFileInvoiceDollar />
-            <p className='font-semibold text-primary-text'>Expense Tracker</p>
+            <p className='font-semibold '>Expense Tracker</p>
         </NavLink>
     );
 };

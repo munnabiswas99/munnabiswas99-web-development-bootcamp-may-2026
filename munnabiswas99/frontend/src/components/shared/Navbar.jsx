@@ -49,8 +49,8 @@ const Navbar = () => {
         <div className="hidden md:flex gap-2">
           {user ? (
             <>
-              <NavLink className="rounded-full px-3 py-1 text-secondary-text bg-white">
-                <img src="" alt="profile" />
+              <NavLink>
+                <img className="rounded-full w-10 h-10 object-cover" src={user.photoURL} alt="profile" />
               </NavLink>
 
               <button
@@ -96,8 +96,8 @@ const Navbar = () => {
         <div className="flex gap-3 mt-10">
           {user ? (
             <>
-              <NavLink className="rounded-full px-3 py-1 text-secondary-text bg-white">
-                <img src="/" alt="profile" />
+              <NavLink>
+                <img className="rounded-full w-10 h-10 object-cover" src={user.photoURL} alt="profile" />
               </NavLink>
 
               <button

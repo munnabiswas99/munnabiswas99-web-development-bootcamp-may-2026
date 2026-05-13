@@ -3,10 +3,13 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../../components/logo/Logo";
 import useAuth from "../../hooks/useAuth";
+import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Register = () => {
-  const { registerUser } = useAuth();
+  const { registerUser, updateUserProfile } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
@@ -14,11 +17,48 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const handleRegister = (data) => {
+  const handleRegistration = (data) => {
+    
+    const profileImg = data.photo[0];
     registerUser(data.email, data.password)
       .then((res) => {
-        console.log(res.user);
-        navigate("/");
+        console.log(res.user)
+        const formData = new FormData();
+        formData.append('image', profileImg);
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Image_Host_API_Key}`
+
+        axios.post(image_API_URL, formData)
+        .then(res => {
+          const photoURL = res.data.data.url;
+
+          // Upadate user profile
+          const userProfile = {
+            displayName: data.name,
+            photoURL : photoURL
+
+          }
+
+          const userInfo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: photoURL
+          }
+
+          axiosSecure.post('/users', userInfo)
+          .then(() => {
+            // console.log(res.data)
+          })
+
+          updateUserProfile(userProfile)
+          .then(()=>{
+            console.log("Profile Updated");
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        })
+
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);
@@ -60,8 +100,51 @@ const Register = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(handleRegister)} className="space-y-5">
-            {/* Email */}
+          <form onSubmit={handleSubmit(handleRegistration)} className="space-y-5">
+            {/* Name */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Name
+              </label>
+
+              <input
+                type="text"
+                placeholder="Enter your Name"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-black"
+                {...register("name", {
+                  required: "Name is required",
+                })}
+              />
+
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+            
+            {/* Profile Photo */}
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Profile Photo
+              </label>
+
+              <input
+                type="file"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-black"
+                {...register("photo", {
+                  required: "Profile photo is required",
+                })}
+              />
+
+              {errors.photo && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.photo.message}
+                </p>
+              )}
+            </div>
+
+              {/* Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-2">
                 Email

@@ -1,0 +1,106 @@
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
+const data = [
+  {
+    name: "Table",
+    income: 2400,
+  },
+  {
+    name: "Chair",
+    income: 1398,
+  },
+  {
+    name: "Fan",
+    income: 2800,
+  },
+  {
+    name: "Light",
+    income: 908,
+  },
+  {
+    name: "UPS",
+    income: 4800,
+  },
+  {
+    name: "Brush",
+    income: 100,
+  },
+  {
+    name: "Tooth Pest",
+    income: 3490
+  },
+];
+
+export default function IncomeLineChart() {
+  return (
+    <div className="w-full h-90 md:h-110 bg-gray-200 rounded-3xl p-4 md:p-6 shadow-lg border-2 border-gray-300">
+      
+      <h1 className="text-lg md:text-2xl font-semibold mb-4">
+          Recent Income Source
+      </h1>
+
+      <ResponsiveContainer width="100%" height="90%">
+        
+        <LineChart
+          data={data}
+          margin={{
+            top: 10,
+            right: 20,
+            left: -10,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#d1d5db"
+          />
+
+          <XAxis
+            dataKey="name"
+            tick={{ fill: "#4b5563", fontSize: 12 }}
+          />
+
+          <YAxis
+            tick={{ fill: "#4b5563", fontSize: 12 }}
+          />
+
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#ffffff",
+              borderRadius: "12px",
+              border: "none",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            }}
+          />
+
+          <Legend />
+
+          {/* Expense Line */}
+          <Line
+            type="monotone"
+            dataKey="income"
+            stroke="#8b5cf6"
+            strokeWidth={3}
+            dot={{
+              fill: "#8b5cf6",
+              r: 4,
+            }}
+            activeDot={{
+              r: 7,
+            }}
+          />
+        </LineChart>
+
+      </ResponsiveContainer>
+    </div>
+  );
+}
