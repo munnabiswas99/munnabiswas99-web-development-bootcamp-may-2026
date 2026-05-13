@@ -13,6 +13,16 @@ const SideBar = () => {
   const [open, setOpen] = useState(false);
   const { user, logOut } = useAuth();
 
+  const handleLogout = () => {
+    logOut()
+      .then(() => {
+        console.log("User Logout");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const links = (
     <>
       <li className="rounded-xl hover:bg-gray-300 px-3 py-1">
@@ -21,7 +31,7 @@ const SideBar = () => {
         </NavLink>
       </li>
       <li className="hover:bg-auto rounded-xl hover:bg-gray-300 px-3 py-1">
-        <NavLink to="/transactions" className="flex items-center gap-2 text-lg">
+        <NavLink to="/dashboard/transactions" className="flex items-center gap-2 text-lg">
           <GrTransaction /> Transactions
         </NavLink>
       </li>
@@ -35,6 +45,22 @@ const SideBar = () => {
           <IoMdSettings /> Settings
         </NavLink>
       </li>
+      <div className="flex items-center justify-start mt-30 gap-2">
+        <NavLink>
+          <img
+            className="rounded-full w-10 h-10 object-cover"
+            src={user.photoURL}
+            alt="profile"
+          />
+        </NavLink>
+
+        <button
+          onClick={handleLogout}
+          className="rounded px-3 py-2 text-secondary-text bg-gray-300 hover:bg-gray-400 cursor-pointer"
+        >
+          Logout
+        </button>
+      </div>
     </>
   );
   return (
@@ -50,7 +76,7 @@ const SideBar = () => {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:block border-r-2 border-gray-300 min-h-screen pr-5">
+      <div className="hidden md:block border-r-2 border-gray-300 pr-5">
         <div className="bg-background rounded-2xl p-1">
           <Logo />
         </div>

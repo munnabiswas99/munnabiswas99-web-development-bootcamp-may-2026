@@ -8,6 +8,8 @@ import NotFound from "../pages/404/NotFound";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Transactions from "../pages/dashboard/Transactions";
+import AddTransaction from "../pages/dashboard/AddTransaction";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ export const router = createBrowserRouter([
       {
         index: true,
         Component: Dashboard
+      },
+      {
+        path: "/dashboard/transactions",
+        Component: Transactions
+      },
+      {
+        path: "/dashboard/add-transaction",
+        Component: AddTransaction
       }
 
     ]
