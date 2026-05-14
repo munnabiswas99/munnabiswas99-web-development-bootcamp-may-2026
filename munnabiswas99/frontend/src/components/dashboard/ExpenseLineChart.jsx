@@ -9,48 +9,21 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "Table",
-    expense: 2400,
-  },
-  {
-    name: "Chair",
-    expense: 1398,
-  },
-  {
-    name: "Fan",
-    expense: 2800,
-  },
-  {
-    name: "Light",
-    expense: 3908,
-  },
-  {
-    name: "UPS",
-    expense: 4800,
-  },
-  {
-    name: "Brush",
-    expense: 100,
-  },
-  {
-    name: "Tooth Pest",
-    income: 3490,
-    expense: 70,
-  },
-];
 
-export default function ExpenseLineChart() {
+export default function ExpenseLineChart({ recentExpense }) {
+
+  const data = recentExpense.map((item) => ({
+    name: item.title,
+    expense: item.amount,
+  }));
+
   return (
     <div className="w-full h-90 md:h-110 bg-gray-200 rounded-3xl p-4 md:p-6 shadow-lg border-2 border-gray-300">
-      
       <h1 className="text-lg md:text-2xl font-semibold mb-4">
-          Recent Expences
+        Recent Expences
       </h1>
 
       <ResponsiveContainer width="100%" height="90%">
-        
         <LineChart
           data={data}
           margin={{
@@ -60,19 +33,11 @@ export default function ExpenseLineChart() {
             bottom: 5,
           }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="#d1d5db"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
 
-          <XAxis
-            dataKey="name"
-            tick={{ fill: "#4b5563", fontSize: 12 }}
-          />
+          <XAxis dataKey="name" tick={{ fill: "#4b5563", fontSize: 12 }} />
 
-          <YAxis
-            tick={{ fill: "#4b5563", fontSize: 12 }}
-          />
+          <YAxis tick={{ fill: "#4b5563", fontSize: 12 }} />
 
           <Tooltip
             contentStyle={{
@@ -100,7 +65,6 @@ export default function ExpenseLineChart() {
             }}
           />
         </LineChart>
-
       </ResponsiveContainer>
     </div>
   );

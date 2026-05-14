@@ -3,7 +3,6 @@ import { NavLink } from "react-router";
 import { MdDashboard } from "react-icons/md";
 import { GrTransaction } from "react-icons/gr";
 import { IoWallet } from "react-icons/io5";
-import { IoMdSettings } from "react-icons/io";
 import Logo from "../logo/Logo";
 import useAuth from "../../hooks/useAuth";
 import { GiCancel } from "react-icons/gi";
@@ -36,13 +35,8 @@ const SideBar = () => {
         </NavLink>
       </li>
       <li className="hover:bg-auto rounded-xl hover:bg-gray-300 px-3 py-1">
-        <NavLink to="/wallet" className="flex items-center gap-2 text-lg">
+        <NavLink to="/dashboard/wallet" className="flex items-center gap-2 text-lg">
           <IoWallet /> Wallet
-        </NavLink>
-      </li>
-      <li className="hover:bg-auto rounded-xl hover:bg-gray-300 px-3 py-1">
-        <NavLink to="/setting" className="flex items-center gap-2 text-lg">
-          <IoMdSettings /> Settings
         </NavLink>
       </li>
       <div className="flex items-center justify-start mt-30 gap-2">
@@ -64,7 +58,7 @@ const SideBar = () => {
     </>
   );
   return (
-    <div className="p-6">
+    <div className="p-6 md:mt-2">
       <div className="flex justify-between items-center gap-20 md:hidden">
         <div className="bg-background rounded-2xl p-1">
           <Logo />
@@ -76,8 +70,8 @@ const SideBar = () => {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:block border-r-2 border-gray-300 pr-5">
-        <div className="bg-background rounded-2xl p-1">
+      <div className="hidden md:block pr-6">
+        <div className="bg-background rounded-2xl p-1 flex justify-center">
           <Logo />
         </div>
 

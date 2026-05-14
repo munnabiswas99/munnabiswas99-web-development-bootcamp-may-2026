@@ -1,54 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { NavLink } from "react-router";
-
-const transactions = [
-  {
-    id: 1,
-    title: "Salary",
-    type: "Income",
-    category: "Job",
-    amount: 50000,
-    date: "12 Aug 2026",
-  },
-  {
-    id: 2,
-    title: "Groceries",
-    type: "Expense",
-    category: "Food",
-    amount: 2500,
-    date: "10 Aug 2026",
-  },
-  {
-    id: 3,
-    title: "Stock Investment",
-    type: "Investment",
-    category: "Stock",
-    amount: 10000,
-    date: "08 Aug 2026",
-  },
-  {
-    id: 4,
-    title: "Emergency Savings",
-    type: "Savings",
-    category: "Bank",
-    amount: 5000,
-    date: "05 Aug 2026",
-  },
-];
+import Swal from "sweetalert2";
+import useTransactionData from "../../hooks/useTransactionData";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { GiCancel } from "react-icons/gi";
 
 const Transactions = () => {
+  const { transactionData, refetch } = useTransactionData();
+  const axiosSecure = useAxiosSecure();
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  const deleteTransaction = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await axiosSecure.delete(`/transactions/${id}`);
+
+      if (res.data.deletedCount > 0) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "Transaction has been removed.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        refetch();
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text:
+          error?.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
+      });
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Transactions</h1>
 
-        <NavLink to='/dashboard/add-transaction'>
-            <button className="bg-mist-600 px-5 py-3 rounded-2xl text-white cursor-pointer hover:opacity-90 transition">
-                Add Transaction
-            </button>
+        <NavLink to="/dashboard/add-transaction">
+          <button className="bg-mist-600 px-5 py-3 rounded-2xl text-white cursor-pointer hover:opacity-90 transition">
+            Add Transaction
+          </button>
         </NavLink>
       </div>
 
@@ -67,21 +79,21 @@ const Transactions = () => {
           </thead>
 
           <tbody>
-            {transactions.map((transaction) => (
+            {transactionData.map((transaction) => (
               <tr
-                key={transaction.id}
-                className="border-b border-gray-300 hover:bg-gray-300 transition"
+                key={transaction._id}
+                className="border-b border-gray-300 hover:bg-gray-300"
               >
                 <td className="p-4 font-medium">{transaction.title}</td>
 
                 <td className="p-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      transaction.type === "Income"
+                    className={`px-3 py-1 rounded-xl text-sm font-medium ${
+                      transaction.type === "income"
                         ? "bg-green-200 text-green-700"
-                        : transaction.type === "Expense"
+                        : transaction.type === "expense"
                           ? "bg-red-200 text-red-700"
-                          : transaction.type === "Investment"
+                          : transaction.type === "investment"
                             ? "bg-blue-200 text-blue-700"
                             : "bg-purple-200 text-purple-700"
                     }`}
@@ -92,18 +104,27 @@ const Transactions = () => {
 
                 <td className="p-4">{transaction.category}</td>
 
-                <td className="p-4 font-semibold">৳ {transaction.amount}</td>
+                <td className="p-4 font-semibold">$ {transaction.amount}</td>
 
                 <td className="p-4">{transaction.date}</td>
 
                 <td className="flex text-xl gap-6 p-4">
-                  <button className="cursor-pointer">
+                  <button
+                    onClick={() => setSelectedTransaction(transaction)}
+                    className="cursor-pointer"
+                  >
                     <IoEyeSharp />
                   </button>
-                  <button className="cursor-pointer">
+                  <NavLink
+                    to={`/dashboard/edit-transaction/${transaction._id}`}
+                    className="cursor-pointer"
+                  >
                     <FaEdit />
-                  </button>
-                  <button className="cursor-pointer">
+                  </NavLink>
+                  <button
+                    onClick={() => deleteTransaction(transaction._id)}
+                    className="cursor-pointer"
+                  >
                     <MdDelete />
                   </button>
                 </td>
@@ -115,9 +136,9 @@ const Transactions = () => {
 
       {/* Mobile Table */}
       <div className="md:hidden space-y-4">
-        {transactions.map((transaction) => (
+        {transactionData.map((transaction) => (
           <div
-            key={transaction.id}
+            key={transaction._id}
             className="bg-gray-200 rounded-2xl p-4 shadow-lg"
           >
             <div className="flex justify-between items-center mb-3">
@@ -125,11 +146,11 @@ const Transactions = () => {
 
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  transaction.type === "Income"
+                  transaction.type === "income"
                     ? "bg-green-200 text-green-700"
-                    : transaction.type === "Expense"
+                    : transaction.type === "expense"
                       ? "bg-red-200 text-red-700"
-                      : transaction.type === "Investment"
+                      : transaction.type === "investment"
                         ? "bg-blue-200 text-blue-700"
                         : "bg-purple-200 text-purple-700"
                 }`}
@@ -141,29 +162,38 @@ const Transactions = () => {
             <div className="space-y-2 text-sm flex justify-between">
               <div className="space-y-2">
                 <p>
-                  <span className="font-semibold">Category:</span>
+                  <span className="font-semibold">Category: </span>
                   {transaction.category}
                 </p>
 
                 <p>
-                  <span className="font-semibold">Amount:</span>৳{" "}
+                  <span className="font-semibold">Amount: </span>
                   {transaction.amount}
                 </p>
 
                 <p>
-                  <span className="font-semibold">Date:</span>
+                  <span className="font-semibold">Date: </span>
                   {transaction.date}
                 </p>
               </div>
 
               <div className="flex flex-col text-xl gap-2 mr-5">
-                <button className="cursor-pointer">
+                <button
+                  onClick={() => setSelectedTransaction(transaction)}
+                  className="cursor-pointer"
+                >
                   <IoEyeSharp />
                 </button>
-                <button className="cursor-pointer">
+                <NavLink
+                  to={`/dashboard/edit-transaction/${transaction._id}`}
+                  className="cursor-pointer"
+                >
                   <FaEdit />
-                </button>
-                <button className="cursor-pointer">
+                </NavLink>
+                <button
+                  onClick={() => deleteTransaction(transaction._id)}
+                  className="cursor-pointer"
+                >
                   <MdDelete />
                 </button>
               </div>
@@ -171,6 +201,88 @@ const Transactions = () => {
           </div>
         ))}
       </div>
+
+      {/* Transaction Details Modal */}
+      {selectedTransaction && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-lg relative shadow-2xl">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedTransaction(null)}
+              className="absolute top-4 right-4 text-3xl cursor-pointer"
+            >
+              <GiCancel />
+            </button>
+
+            <h2 className="text-2xl font-bold mb-6">Transaction Details</h2>
+
+            <div className="flex justify-between space-y-3 px-2">
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm text-gray-500">Title</p>
+                  <p className="font-semibold">{selectedTransaction.title}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Amount</p>
+                  <p className="font-semibold">
+                    $ {selectedTransaction.amount}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">Date</p>
+                  <p className="font-semibold">{selectedTransaction.date}</p>
+                </div>
+              </div>
+
+              {/* Type Category */}
+              <div className="space-y-3">
+                {/* Type */}
+                <div>
+                  <p className="text-sm text-gray-500">Type</p>
+
+                  <span
+                    className={`px-3 py-1 rounded-xl text-sm font-medium inline-block mt-1 ${
+                      selectedTransaction.type === "income"
+                        ? "bg-green-200 text-green-700"
+                        : selectedTransaction.type === "expense"
+                          ? "bg-red-200 text-red-700"
+                          : selectedTransaction.type === "investment"
+                            ? "bg-blue-200 text-blue-700"
+                            : "bg-purple-200 text-purple-700"
+                    }`}
+                  >
+                    {selectedTransaction.type}
+                  </span>
+                </div>
+
+                {/* Category */}
+                <div>
+                  <p className="text-sm text-gray-500">Category</p>
+                  <p className="font-semibold">
+                    {selectedTransaction.category}
+                  </p>
+                </div>
+                {/* Category */}
+                <div>
+                  <p className="text-sm text-gray-500">Wallet</p>
+                  <p className="font-semibold">
+                    {selectedTransaction.walletType}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Note</p>
+
+              <div className="bg-gray-100 rounded-xl p-4 mt-1">
+                {selectedTransaction.note || "No note available"}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

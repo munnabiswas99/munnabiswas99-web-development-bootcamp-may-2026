@@ -9,36 +9,22 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-
-const data = [
-  {
-    name: "Jan",
-    income: 4000,
-    expense: 2400,
-  },
-  {
-    name: "Feb",
-    income: 3000,
-    expense: 1398,
-  },
-  {
-    name: "Mar",
-    income: 5000,
-    expense: 2800,
-  },
-  {
-    name: "Apr",
-    income: 4780,
-    expense: 3908,
-  },
-  {
-    name: "May",
-    income: 8890,
-    expense: 4800,
-  },
-];
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const Barchart = () => {
+
+   const axiosSecure = useAxiosSecure();
+   
+   const {data: incomeExpenseData = []} = useQuery({
+    queryKey: ["income-expense"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/income-expense");
+      return res.data;
+    }
+   })
+
+   console.log(incomeExpenseData);
   return (
     <div className="w-full h-88 md:h-120 bg-gray-200 rounded-3xl p-4 md:p-6 shadow-lg mt-5 border-2 border-gray-300">
       
@@ -49,7 +35,7 @@ const Barchart = () => {
       <ResponsiveContainer width="100%" height="90%">
         
         <BarChart
-          data={data}
+          data={incomeExpenseData}
           margin={{
             top: 10,
             right: 20,

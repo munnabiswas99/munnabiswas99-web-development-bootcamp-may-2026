@@ -9,47 +9,20 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "Table",
-    income: 2400,
-  },
-  {
-    name: "Chair",
-    income: 1398,
-  },
-  {
-    name: "Fan",
-    income: 2800,
-  },
-  {
-    name: "Light",
-    income: 908,
-  },
-  {
-    name: "UPS",
-    income: 4800,
-  },
-  {
-    name: "Brush",
-    income: 100,
-  },
-  {
-    name: "Tooth Pest",
-    income: 3490
-  },
-];
+export default function IncomeLineChart({ recentIncome }) {
 
-export default function IncomeLineChart() {
+  const data = recentIncome.map((item) => ({
+    name: item.title,
+    income: item.amount,
+  }));
+
   return (
     <div className="w-full h-90 md:h-110 bg-gray-200 rounded-3xl p-4 md:p-6 shadow-lg border-2 border-gray-300">
-      
       <h1 className="text-lg md:text-2xl font-semibold mb-4">
-          Recent Income Source
+        Recent Income Source
       </h1>
 
       <ResponsiveContainer width="100%" height="90%">
-        
         <LineChart
           data={data}
           margin={{
@@ -59,19 +32,11 @@ export default function IncomeLineChart() {
             bottom: 5,
           }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="#d1d5db"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
 
-          <XAxis
-            dataKey="name"
-            tick={{ fill: "#4b5563", fontSize: 12 }}
-          />
+          <XAxis dataKey="name" tick={{ fill: "#4b5563", fontSize: 12 }} />
 
-          <YAxis
-            tick={{ fill: "#4b5563", fontSize: 12 }}
-          />
+          <YAxis tick={{ fill: "#4b5563", fontSize: 12 }} />
 
           <Tooltip
             contentStyle={{
@@ -99,7 +64,6 @@ export default function IncomeLineChart() {
             }}
           />
         </LineChart>
-
       </ResponsiveContainer>
     </div>
   );

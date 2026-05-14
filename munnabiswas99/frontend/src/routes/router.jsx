@@ -10,6 +10,9 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Transactions from "../pages/dashboard/Transactions";
 import AddTransaction from "../pages/dashboard/AddTransaction";
+import EditTransaction from "../pages/dashboard/EditTransaction";
+import Wallet from "../pages/dashboard/Wallet";
+import AddWallet from "../pages/dashboard/AddWallet";
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +59,18 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/add-transaction",
         Component: AddTransaction
+      },
+      {
+        path: "/dashboard/edit-transaction/:id",
+        Component: EditTransaction
+      },
+      {
+        path: "/dashboard/wallet",
+        Component: Wallet
+      },
+      {
+        path: "/dashboard/add-wallet",
+        Component: AddWallet
       }
 
     ]
