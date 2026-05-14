@@ -30,6 +30,7 @@ async function run() {
     const db = client.db("ExpenseTrackerDB");
     const userCollection = db.collection("users");
     const transactionCollection = db.collection("transactions");
+    const walletCollection = db.collection("wallets");
 
     // Users related API's
 
@@ -60,14 +61,16 @@ async function run() {
     // Get User Transactions Data
     app.get("/transactions", verifyToken, async (req, res) => {
       const email = req.decoded.email;
-      const result = await transactionCollection.find({ userEmail: email }).toArray();
+      const result = await transactionCollection
+        .find({ userEmail: email })
+        .toArray();
       res.send(result);
     });
 
     // Get a specific transaction by id
     app.get("/transactions/:id", verifyToken, async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) };
       const result = await transactionCollection.findOne(query);
 
       res.send(result);
@@ -76,13 +79,49 @@ async function run() {
     // Post Transaction Data
     app.post("/transactions", verifyToken, async (req, res) => {
       try {
-        const transaction = req.body;
+        const transactionData = req.body;
+        transactionData.userEmail = req.decoded.email;
+        transactionData.createdAt = new Date();
 
-        transaction.userEmail = req.decoded.email;
+        const wallet = await walletCollection.findOne({
+          _id: new ObjectId(transactionData.walletId),
+        });
 
-        transaction.createdAt = new Date();
+        if (!wallet) {
+          return res.status(404).send({
+            message: "Wallet not found",
+          });
+        }
 
-        const result = await transactionCollection.insertOne(transaction);
+        let updatedBalance = Number(wallet.balance);
+
+        // For income add balance
+        if (transactionData.type === "income") {
+          updatedBalance += Number(transactionData.amount);
+        }
+
+        // for Expense/Investment/Savings reduce money
+        else {
+          updatedBalance -= Number(transactionData.amount);
+        }
+
+        // Prevent negative balance
+        if (updatedBalance < 0) {
+          return res.status(400).send({
+            message: "Insufficient wallet balance",
+          });
+        }
+
+        // Update Balance
+        const query = { _id: new ObjectId(transactionData.walletId) };
+        const updateDoc = {
+          $set: {
+            balance: updatedBalance,
+          },
+        };
+        await walletCollection.updateOne(query, updateDoc);
+
+        const result = await transactionCollection.insertOne(transactionData);
 
         res.send(result);
       } catch (error) {
@@ -92,61 +131,57 @@ async function run() {
       }
     });
 
-    // Update a transaction
     // Update Transaction
-app.patch("/transactions/:id", verifyToken, async (req, res) => {
-  try {
-    const id = req.params.id;
-    const email = req.decoded.email;
+    app.patch("/transactions/:id", verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        const email = req.decoded.email;
 
-    // Validate ObjectId
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).send({
-        message: "Invalid transaction id",
-      });
-    }
+        // Validate ObjectId
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).send({
+            message: "Invalid transaction id",
+          });
+        }
 
-    const updatedData = req.body;
+        const updatedData = req.body;
 
-    // Remove unwanted fields
-    delete updatedData._id;
-    delete updatedData.userEmail;
+        // Remove unwanted fields
+        delete updatedData._id;
+        delete updatedData.userEmail;
 
-    const query = {
-      _id: new ObjectId(id),
-      userEmail: email,
-    };
+        const query = {
+          _id: new ObjectId(id),
+          userEmail: email,
+        };
 
-    const updateDoc = {
-      $set: {
-        ...updatedData,
-      },
-    };
+        const updateDoc = {
+          $set: {
+            ...updatedData,
+          },
+        };
 
-    const result = await transactionCollection.updateOne(
-      query,
-      updateDoc
-    );
+        const result = await transactionCollection.updateOne(query, updateDoc);
 
-    res.send(result);
-  } catch (error) {
-    console.log(error);
+        res.send(result);
+      } catch (error) {
+        console.log(error);
 
-    res.status(500).send({
-      message: "Failed to update transaction",
+        res.status(500).send({
+          message: "Failed to update transaction",
+        });
+      }
     });
-  }
-});
 
     // Delete Transaction
-    app.delete("/transactions/:id", verifyToken, async(req, res) => {
+    app.delete("/transactions/:id", verifyToken, async (req, res) => {
       const id = req.params.id;
       console.log(id);
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
 
       const result = await transactionCollection.deleteOne(query);
       res.send(result);
-    })
+    });
 
     // Dash Board data
     app.get("/dashboard-data", verifyToken, async (req, res) => {
@@ -209,7 +244,7 @@ app.patch("/transactions/:id", verifyToken, async (req, res) => {
       }
     });
 
-// Get Monthly Income and Expense
+    // Get Monthly Income and Expense
     app.get("/income-expense", verifyToken, async (req, res) => {
       try {
         const email = req.decoded.email;
@@ -219,7 +254,20 @@ app.patch("/transactions/:id", verifyToken, async (req, res) => {
           .toArray();
 
         // Build last 5 months info
-        const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
         const now = new Date();
         const last5Months = [];
 
@@ -227,37 +275,62 @@ app.patch("/transactions/:id", verifyToken, async (req, res) => {
           const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
           last5Months.push({
             name: monthNames[d.getMonth()],
-            month: d.getMonth() + 1,  // 1-12
+            month: d.getMonth() + 1, // 1-12
             year: d.getFullYear(),
           });
         }
 
-        // Filter & summarize
+        // Filter and summarize
         const summary = last5Months.map(({ name, month, year }) => {
           const monthTransactions = transactions.filter((t) => {
             const [tYear, tMonth] = t.date.split("-").map(Number);
             return tYear === year && tMonth === month;
           });
 
-        const income = monthTransactions
+          const income = monthTransactions
             .filter((t) => t.type === "income")
             .reduce((sum, t) => sum + Number(t.amount), 0); // 👈 Number()
 
-        const expense = monthTransactions
-          .filter((t) => t.type === "expense")
-          .reduce((sum, t) => sum + Number(t.amount), 0); // 👈 Number()
-            return { name, income, expense };
-          });
+          const expense = monthTransactions
+            .filter((t) => t.type === "expense")
+            .reduce((sum, t) => sum + Number(t.amount), 0); // 👈 Number()
+          return { name, income, expense };
+        });
 
         res.send(summary);
-
       } catch (error) {
         console.error("income-expense error:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     });
 
+    // Get wallet data
+    app.get("/wallets", verifyToken, async (req, res) => {
+      const email = req.decoded.email;
+      const result = await walletCollection
+        .find({ userEmail: email })
+        .toArray();
+      res.send(result);
+    });
 
+    // Post Wallet Data
+    app.post("/wallet", verifyToken, async (req, res) => {
+      try {
+        const wallet = req.body;
+
+        wallet.userEmail = req.decoded.email;
+
+        wallet.createdAt = new Date();
+
+        const result = await walletCollection.insertOne(wallet);
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          message: "Failed to add transaction",
+        });
+      }
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
