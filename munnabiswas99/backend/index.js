@@ -61,9 +61,7 @@ async function run() {
     // Get User Transactions Data
     app.get("/transactions", verifyToken, async (req, res) => {
       const email = req.decoded.email;
-      const result = await transactionCollection
-        .find({ userEmail: email })
-        .toArray();
+      const result = await transactionCollection.find({ userEmail: email }).sort({ createdAt: -1 }).toArray();
       res.send(result);
     });
 
@@ -131,7 +129,7 @@ async function run() {
       }
     });
 
-    // Update Transaction
+    // Update tranaction
     app.patch("/transactions/:id", verifyToken, async (req, res) => {
       try {
         const id = req.params.id;
@@ -149,6 +147,108 @@ async function run() {
         // Remove unwanted fields
         delete updatedData._id;
         delete updatedData.userEmail;
+
+        /*
+    =================================
+    FIND OLD TRANSACTION
+    =================================
+    */
+
+        const oldTransaction = await transactionCollection.findOne({
+          _id: new ObjectId(id),
+          userEmail: email,
+        });
+
+        if (!oldTransaction) {
+          return res.status(404).send({
+            message: "Transaction not found",
+          });
+        }
+
+        /*
+    =================================
+    FIND WALLET
+    =================================
+    */
+
+        const wallet = await walletCollection.findOne({
+          _id: new ObjectId(oldTransaction.walletId),
+        });
+
+        if (!wallet) {
+          return res.status(404).send({
+            message: "Wallet not found",
+          });
+        }
+
+        /*
+    =================================
+    REVERSE OLD TRANSACTION EFFECT
+    =================================
+    */
+
+        let updatedBalance = Number(wallet.balance);
+
+        // OLD income → subtract
+        if (oldTransaction.type === "income") {
+          updatedBalance -= Number(oldTransaction.amount);
+        }
+
+        // OLD expense/investment/savings → add back
+        else {
+          updatedBalance += Number(oldTransaction.amount);
+        }
+
+        /*
+    =================================
+    APPLY NEW TRANSACTION EFFECT
+    =================================
+    */
+
+        // NEW income → add
+        if (updatedData.type === "income") {
+          updatedBalance += Number(updatedData.amount);
+        }
+
+        // NEW expense/investment/savings → subtract
+        else {
+          updatedBalance -= Number(updatedData.amount);
+        }
+
+        /*
+    =================================
+    PREVENT NEGATIVE BALANCE
+    =================================
+    */
+
+        if (updatedBalance < 0) {
+          return res.status(400).send({
+            message: "Insufficient wallet balance",
+          });
+        }
+
+        /*
+    =================================
+    UPDATE WALLET BALANCE
+    =================================
+    */
+
+        await walletCollection.updateOne(
+          {
+            _id: wallet._id,
+          },
+          {
+            $set: {
+              balance: updatedBalance,
+            },
+          },
+        );
+
+        /*
+    =================================
+    UPDATE TRANSACTION
+    =================================
+    */
 
         const query = {
           _id: new ObjectId(id),
@@ -175,12 +275,70 @@ async function run() {
 
     // Delete Transaction
     app.delete("/transactions/:id", verifyToken, async (req, res) => {
-      const id = req.params.id;
-      console.log(id);
-      const query = { _id: new ObjectId(id) };
+      try {
+        const id = req.params.id;
 
-      const result = await transactionCollection.deleteOne(query);
-      res.send(result);
+        // STEP 1
+        const transaction = await transactionCollection.findOne({
+          _id: new ObjectId(id),
+        });
+
+        if (!transaction) {
+          return res.status(404).send({
+            message: "Transaction not found",
+          });
+        }
+
+        // STEP 2
+        const wallet = await walletCollection.findOne({
+          _id: new ObjectId(transaction.walletId),
+        });
+
+        if (!wallet) {
+          return res.status(404).send({
+            message: "Wallet not found",
+          });
+        }
+
+        // STEP 3
+        let updatedBalance = Number(wallet.balance);
+
+        if (transaction.type === "income") {
+          updatedBalance -= Number(transaction.amount);
+        } else {
+          updatedBalance += Number(transaction.amount);
+        }
+
+        if (updatedBalance < 0) {
+          return res.status(400).send({
+            message: "Insufficient wallet balance",
+          });
+        }
+        // STEP 4
+        await walletCollection.updateOne(
+          {
+            _id: wallet._id,
+          },
+          {
+            $set: {
+              balance: updatedBalance,
+            },
+          },
+        );
+
+        // STEP 5
+        const result = await transactionCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send(result);
+      } catch (error) {
+        console.log(error);
+
+        res.status(500).send({
+          message: "Failed to delete transaction",
+        });
+      }
     });
 
     // Dash Board data
@@ -307,9 +465,7 @@ async function run() {
     // Get wallet data
     app.get("/wallets", verifyToken, async (req, res) => {
       const email = req.decoded.email;
-      const result = await walletCollection
-        .find({ userEmail: email })
-        .toArray();
+      const result = await walletCollection.find({ userEmail: email }).toArray();
       res.send(result);
     });
 
@@ -317,6 +473,12 @@ async function run() {
     app.post("/wallet", verifyToken, async (req, res) => {
       try {
         const wallet = req.body;
+
+        if (wallet.balance < 0) {
+          return res.status(400).send({
+            message: "Wallet balance can not be less than zero(0)",
+          });
+        }
 
         wallet.userEmail = req.decoded.email;
 
