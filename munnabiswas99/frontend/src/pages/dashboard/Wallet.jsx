@@ -2,6 +2,7 @@ import React from "react";
 import { RiBankCard2Fill } from "react-icons/ri";
 import { NavLink } from "react-router";
 import useWalletData from "../../hooks/useWalletData";
+import { FaWallet } from "react-icons/fa6";
 
 const Wallet = () => {
   const { walletData } = useWalletData();
@@ -12,7 +13,7 @@ const Wallet = () => {
         <h1 className="text-xl md:text-3xl font-bold">Your Wallets</h1>
         <NavLink
           to="/dashboard/add-wallet"
-          className="bg-gray-300 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-400"
+          className="text-white bg-gray-600 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-500"
         >
           Add Wallet
         </NavLink>
@@ -23,8 +24,8 @@ const Wallet = () => {
           <div key={wallet._id} className="shadow p-4 border border-gray-300 w-70 rounded-lg hover:bg-gray-300">
             <div className="flex justify-between items-center">
               <h1 className="font-bold text-xl">{wallet.title}</h1>
-              <div className="text-4xl">
-                <RiBankCard2Fill />
+              <div className="text-4xl text-rose-950">
+                <FaWallet />
               </div>
             </div>
             <div className="space-y-3">

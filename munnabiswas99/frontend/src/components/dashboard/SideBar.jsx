@@ -40,7 +40,7 @@ const SideBar = () => {
         </NavLink>
       </li>
       <div className="flex items-center justify-start mt-30 gap-2">
-        <NavLink>
+        <NavLink to='/profile'>
           <img
             className="rounded-full w-10 h-10 object-cover"
             src={user.photoURL}
@@ -50,7 +50,7 @@ const SideBar = () => {
 
         <button
           onClick={handleLogout}
-          className="rounded px-3 py-2 text-secondary-text bg-gray-300 hover:bg-gray-400 cursor-pointer"
+          className="rounded px-3 py-2 text-secondary-text bg-gray-600 hover:bg-gray-500 cursor-pointer"
         >
           Logout
         </button>

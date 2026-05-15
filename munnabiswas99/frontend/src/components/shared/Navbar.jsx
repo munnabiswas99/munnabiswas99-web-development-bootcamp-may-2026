@@ -11,14 +11,14 @@ const Navbar = () => {
 
   const links = (
     <>
-      <li className="rounded-xl hover:bg-gray-900 px-3 py-1">
-        <NavLink to="/">Home</NavLink>
+      <li>
+        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/">Home</NavLink>
       </li>
-      <li className="hover:bg-auto rounded-xl hover:bg-gray-900 px-3 py-1">
-        <NavLink to="/dashboard">Dashboard</NavLink>
+      <li>
+        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/dashboard">Dashboard</NavLink>
       </li>
-      <li className="hover:bg-auto rounded-xl hover:bg-gray-900 px-3 py-1">
-        <NavLink to="/about">About</NavLink>
+      <li>
+        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/about">About</NavLink>
       </li>
     </>
   );
@@ -36,7 +36,7 @@ const Navbar = () => {
   return (
     <div className="my-2 rounded-xl shadow shadow-gray-950">
       {/* Desktop Menu */}
-      <div className="flex justify-between p-3">
+      <div className="flex justify-between p-3 items-center">
         <div className="flex justify-between items-center w-full md:w-auto">
           <Logo></Logo>
           <button onClick={() => setOpen(!open)} className="md:hidden text-3xl">
@@ -44,18 +44,18 @@ const Navbar = () => {
           </button>
         </div>
         <div>
-          <ul className="hidden md:flex">{links}</ul>
+          <ul className="hidden md:flex gap-6">{links}</ul>
         </div>
         <div className="hidden md:flex gap-2">
           {user ? (
             <>
-              <NavLink>
+              <NavLink to='/profile'>
                 <img className="rounded-full w-10 h-10 object-cover" src={user.photoURL} alt="profile" />
               </NavLink>
 
               <button
                 onClick={handleLogout}
-                className="rounded px-3 py-1 text-secondary-text bg-white"
+                className="rounded px-3 py-1 text-primary-text bg-gray-300 hover:bg-gray-200 cursor-pointer"
               >
                 Logout
               </button>
@@ -64,13 +64,13 @@ const Navbar = () => {
             <>
               <NavLink
                 to="/login"
-                className="rounded px-3 py-1 text-primary-text bg-mist-600"
+                className="rounded px-3 py-1 text-secondary-text bg-primary-text"
               >
                 SignIn
               </NavLink>
               <NavLink
                 to="/register"
-                className="rounded px-3 py-1 text-secondary-text bg-white"
+                className="rounded px-3 py-1 text-primary-text bg-gray-300"
               >
                 SignUp
               </NavLink>
@@ -81,7 +81,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-1/2 w-64 bg-black/40 backdrop-blur-md rounded-xl text-white p-5 transition-transform duration-300 md:hidden ${
+        className={`fixed top-0 right-0 h-2/3 w-64 bg-black/40 backdrop-blur-md rounded-xl text-white p-5 transition-transform duration-300 md:hidden ${
           open ? "translate-y-2 -translate-x-2" : "translate-x-full"
         }`}
       >
@@ -96,13 +96,13 @@ const Navbar = () => {
         <div className="flex gap-3 mt-10">
           {user ? (
             <>
-              <NavLink>
+              <NavLink to="/profile">
                 <img className="rounded-full w-10 h-10 object-cover" src={user.photoURL} alt="profile" />
               </NavLink>
 
               <button
                 onClick={handleLogout}
-                className="rounded px-3 py-1 text-secondary-text bg-white"
+                className="rounded px-3 py-1 text-primary-text bg-white"
               >
                 Logout
               </button>
@@ -111,13 +111,13 @@ const Navbar = () => {
             <>
               <NavLink
                 to="/login"
-                className="rounded px-3 py-1 text-primary-text bg-mist-600"
+                className="rounded px-3 py-1 text-secondary-text bg-primary-text"
               >
                 SignIn
               </NavLink>
               <NavLink
                 to="/register"
-                className="rounded px-3 py-1 text-secondary-text bg-white"
+                className="rounded px-3 py-1 text-primary-text bg-white"
               >
                 SignUp
               </NavLink>

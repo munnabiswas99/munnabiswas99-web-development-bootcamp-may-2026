@@ -5,7 +5,7 @@ import CardSection from "../../components/home/CardSection";
 
 const Home = () => {
   return (
-    <div className="p-10">
+    <div className="p-10 bg-gray-100">
         <Banner></Banner>
         <CardSection></CardSection>
     </div>

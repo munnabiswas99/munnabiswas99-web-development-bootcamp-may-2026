@@ -13,6 +13,8 @@ import AddTransaction from "../pages/dashboard/AddTransaction";
 import EditTransaction from "../pages/dashboard/EditTransaction";
 import Wallet from "../pages/dashboard/Wallet";
 import AddWallet from "../pages/dashboard/AddWallet";
+import About from "../pages/about/About";
+import ViewProfile from "../pages/profile/ViewProfile";
 
 export const router = createBrowserRouter([
   {
@@ -24,9 +26,17 @@ export const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path:"*",
-        Component: NotFound
-      }
+        path: "/about",
+        Component: About,
+      },
+      {
+        path: "/profile",
+        element: <PrivateRoute><ViewProfile></ViewProfile></PrivateRoute>
+      },
+      {
+        path: "*",
+        Component: NotFound,
+      },
     ],
   },
 
@@ -46,33 +56,36 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
-        Component: Dashboard
+        Component: Dashboard,
       },
       {
         path: "/dashboard/transactions",
-        Component: Transactions
+        Component: Transactions,
       },
       {
         path: "/dashboard/add-transaction",
-        Component: AddTransaction
+        Component: AddTransaction,
       },
       {
         path: "/dashboard/edit-transaction/:id",
-        Component: EditTransaction
+        Component: EditTransaction,
       },
       {
         path: "/dashboard/wallet",
-        Component: Wallet
+        Component: Wallet,
       },
       {
         path: "/dashboard/add-wallet",
-        Component: AddWallet
-      }
-
-    ]
-  }
+        Component: AddWallet,
+      },
+    ],
+  },
 ]);
