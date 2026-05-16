@@ -11,6 +11,14 @@ Personal Expense Tracker is a full-stack web application designed to help users 
 Frontend Live URL:
 https://personal-expense-tracker-a4828.web.app
 
+## Demo Account
+
+You can use the following demo account to test the application:
+
+### Demo User
+- Email: demo.expense.tracker@gmail.com
+- Password: Demo@1234
+
 ---
 
 # Features
