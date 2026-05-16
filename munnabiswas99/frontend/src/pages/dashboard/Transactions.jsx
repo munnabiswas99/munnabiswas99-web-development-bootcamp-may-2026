@@ -9,7 +9,9 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { GiCancel } from "react-icons/gi";
 
 const Transactions = () => {
-  const { transactionData, refetch } = useTransactionData();
+  const [searchText, setSearchText] = useState("");
+  const [filterType, setFilterType] = useState("");
+  const { transactionData, refetch } = useTransactionData({ searchText, filterType });
   const axiosSecure = useAxiosSecure();
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
@@ -55,13 +57,33 @@ const Transactions = () => {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Transactions</h1>
+        <h1 className="text-lg md:text-2xl font-bold">Your Transactions</h1>
 
         <NavLink to="/dashboard/add-transaction">
-          <button className="bg-mist-600 px-5 py-3 rounded-2xl text-white cursor-pointer hover:opacity-90 transition">
+          <button className="bg-secondary hover:bg-primary px-5 py-3 rounded-xl text-white cursor-pointer hover:opacity-90 transition">
             Add Transaction
           </button>
         </NavLink>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-3 my-4 p-2">
+        <input
+          onChange={(e) => setSearchText(e.target.value)}
+          className="border rounded p-2"
+          type="text"
+          placeholder="Search transaction..."
+        />
+
+        <select
+          onChange={(e) => setFilterType(e.target.value)}
+          className="border rounded p-2"
+        >
+          <option value="">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+          <option value="savings">Savings</option>
+          <option value="investment">Investment</option>
+        </select>
       </div>
 
       {/* Desktop Table */}

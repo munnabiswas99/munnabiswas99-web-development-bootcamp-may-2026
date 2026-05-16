@@ -64,7 +64,7 @@ const SideBar = () => {
           <Logo />
         </div>
 
-        <button onClick={() => setOpen(!open)} className="text-3xl">
+        <button onClick={() => setOpen(!open)} className="text-3xl text-secondary">
           {open ? <GiCancel /> : <AiOutlineMenu />}
         </button>
       </div>

@@ -23,7 +23,7 @@ const CardSection = () => {
         className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-14 md:mt-20 mb-10"
       >
         {/* Card 1 */}
-        <div className="bg-white rounded-xl p-5 shadow-lg hover:bg-gray-300 text-primary-text">
+        <div className="bg-secondary rounded-xl p-5 shadow-lg hover:bg-primary text-gray-200">
           <h1 className="text-xl md:text-2xl font-semibold">
             Monthly Income
           </h1>
@@ -38,13 +38,13 @@ const CardSection = () => {
             Understand Net Worth
           </h1>
 
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-300 text-sm md:text-base">
             View your assets and liabilities in one place.
           </p>
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white rounded-xl p-5 shadow-lg hover:bg-gray-300 text-primary-text">
+        <div className="bg-secondary rounded-xl p-5 shadow-lg hover:bg-primary text-gray-200">
           <h1 className="text-xl md:text-2xl font-semibold">
             Recent Transaction
           </h1>
@@ -59,13 +59,13 @@ const CardSection = () => {
             Track Spending
           </h1>
 
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-300 text-sm md:text-base">
             See where your money goes every month.
           </p>
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white rounded-xl p-5 shadow-lg hover:bg-gray-300 text-primary-text">
+        <div className="bg-secondary rounded-xl p-5 shadow-lg hover:bg-primary text-gray-200">
           <h1 className="text-xl md:text-2xl font-semibold">
             Monthly Expense
           </h1>
@@ -80,13 +80,13 @@ const CardSection = () => {
             Review Expense
           </h1>
 
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-300 text-sm md:text-base">
             Keep track of monthly expenses and save more effectively.
           </p>
         </div>
 
         {/* Card 4 */}
-        <div className="bg-white rounded-xl p-5 shadow-lg hover:bg-gray-300 text-primary-text">
+        <div className="bg-secondary rounded-xl p-5 shadow-lg hover:bg-primary text-gray-200">
           <h1 className="text-xl md:text-2xl font-semibold">
             Investment Plan
           </h1>
@@ -101,7 +101,7 @@ const CardSection = () => {
             Smart Investment
           </h1>
 
-          <p className="text-gray-600 text-sm md:text-base">
+          <p className="text-gray-300 text-sm md:text-base">
             Monitor your investments and grow your financial future.
           </p>
         </div>

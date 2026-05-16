@@ -1,8 +1,9 @@
 import React from "react";
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../../components/logo/Logo";
 import useAuth from "../../hooks/useAuth";
+import Swal from 'sweetalert2'
 
 const Login = () => {
   const { signInUser } = useAuth();
@@ -17,10 +18,14 @@ const Login = () => {
     signInUser(data.email, data.password)
       .then((res) => {
         console.log(res.user);
-        navigate('/')
+        navigate("/");
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${error.message}`,
+        });
       });
   };
 
@@ -28,7 +33,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         {/* Left Side */}
-        <div className="hidden lg:flex flex-col justify-center bg-green-600 p-12">
+        <div className="hidden lg:flex flex-col justify-center bg-primary p-12">
           <div className="mb-6">
             <Logo></Logo>
           </div>
@@ -38,16 +43,16 @@ const Login = () => {
             to Expense Tracker
           </h1>
 
-          <p className="mt-5 text-lg">
-            Track and manage your expense here ...
-          </p>
+          <p className="mt-5 text-lg">Track and manage your expense here ...</p>
         </div>
 
         {/* Right Side */}
         <div className="p-8 md:p-12">
           <div className="mb-8 text-center">
-            <div className="flex flex-col items-center lg:hidden mb-4 bg-green-600 rounded-2xl p-5">
-              <div><Logo /></div>
+            <div className="flex flex-col items-center lg:hidden mb-4 bg-primary rounded-2xl p-5">
+              <div>
+                <Logo />
+              </div>
               <p className="font-bold text-2xl my-5">Welcome Back</p>
             </div>
 
@@ -93,7 +98,7 @@ const Login = () => {
                 placeholder="Enter your password"
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 text-black"
                 {...register("password", {
-                  required: "Password is required"
+                  required: "Password is required",
                 })}
               />
 
@@ -107,7 +112,7 @@ const Login = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl mt-3"
+              className="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 rounded-xl mt-3 cursor-pointer"
             >
               Login
             </button>
@@ -118,7 +123,7 @@ const Login = () => {
             Do not have an account?
             <NavLink to="/register">
               {" "}
-              <span className="text-green-600 font-medium cursor-pointer ml-1">
+              <span className="text-primary font-medium cursor-pointer ml-1">
                 Register
               </span>
             </NavLink>

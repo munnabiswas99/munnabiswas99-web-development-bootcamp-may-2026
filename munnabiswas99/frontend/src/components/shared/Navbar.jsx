@@ -12,13 +12,13 @@ const Navbar = () => {
   const links = (
     <>
       <li>
-        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/">Home</NavLink>
+        <NavLink className="rounded-lg bg-secondary hover:bg-primary px-4 py-2 text-white" to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/dashboard">Dashboard</NavLink>
+        <NavLink className="rounded-lg bg-secondary hover:bg-primary px-4 py-2 text-white" to="/dashboard">Dashboard</NavLink>
       </li>
       <li>
-        <NavLink className="rounded-lg bg-gray-200 hover:bg-gray-300 px-4 py-2 text-primary-text" to="/about">About</NavLink>
+        <NavLink className="rounded-lg bg-secondary hover:bg-primary px-4 py-2 text-white" to="/about">About</NavLink>
       </li>
     </>
   );
@@ -34,12 +34,12 @@ const Navbar = () => {
   };
 
   return (
-    <div className="my-2 rounded-xl shadow shadow-gray-950">
+    <div className="my-3 rounded-xl shadow-lg bg-gray-50">
       {/* Desktop Menu */}
       <div className="flex justify-between p-3 items-center">
         <div className="flex justify-between items-center w-full md:w-auto">
           <Logo></Logo>
-          <button onClick={() => setOpen(!open)} className="md:hidden text-3xl">
+          <button onClick={() => setOpen(!open)} className="md:hidden text-3xl text-secondary">
             {open ? <GiCancel /> : <AiOutlineMenuFold />}
           </button>
         </div>

@@ -6,7 +6,7 @@ import Logo from "../logo/Logo";
 
 const Footer = () => {
   return (
-    <div className="bg-gray-900 p-10 rounded-xl mb-5 text-secondary-text">
+    <div className="bg-gray-900 p-10 rounded-xl my-4 text-secondary-text">
         <div className="flex justify-center md:justify-start"><Logo></Logo></div>
         <div className="flex justify-center gap-5 md:gap-20 my-10">
             <NavLink to='/'>Home</NavLink>

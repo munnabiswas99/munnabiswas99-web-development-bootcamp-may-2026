@@ -6,7 +6,7 @@ import { NavLink } from "react-router";
 
 const About = () => {
   return (
-    <div className="bg-gray-100 min-h-screen py-16 px-5 md:px-12 lg:px-20">
+    <div className="bg-gray-100 min-h-screen py-16 px-5 md:px-12 lg:px-20 rounded-lg">
       <div className="max-w-6xl mx-auto text-center mb-20">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
           About Our Finance Tracker

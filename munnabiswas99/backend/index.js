@@ -9,7 +9,15 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://personal-expense-tracker-a4828.web.app"
+    ],
+    credentials: true,
+  })
+);
 
 const uri = process.env.MONGO_URI;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -56,12 +64,50 @@ async function run() {
       res.send(result);
     });
 
+    // Update user Profile
+    app.patch("/users/profile", verifyToken, async (req, res) => {
+      const email = req.decoded.email;
+
+      const { displayName, photoURL } = req.body;
+
+      const query = {
+        email,
+      };
+
+      const updateDoc = {
+        $set: {
+          displayName,
+          photoURL,
+        },
+      };
+
+      const result = await userCollection.updateOne(query, updateDoc);
+
+      res.send(result);
+    });
+
     // Transaction Related API
 
     // Get User Transactions Data
     app.get("/transactions", verifyToken, async (req, res) => {
+      const searchText = req.query.searchText;
+      const filterType = req.query.filterType;
       const email = req.decoded.email;
-      const result = await transactionCollection.find({ userEmail: email }).sort({ createdAt: -1 }).toArray();
+
+      const query = { userEmail: email };
+
+      if (searchText) {
+        query.title = { $regex: searchText, $options: "i" };
+      }
+
+      if (filterType) {
+        query.type = filterType;
+      }
+      const result = await transactionCollection
+        .find(query)
+        .limit(10)
+        .sort({ createdAt: -1 })
+        .toArray();
       res.send(result);
     });
 
@@ -465,7 +511,9 @@ async function run() {
     // Get wallet data
     app.get("/wallets", verifyToken, async (req, res) => {
       const email = req.decoded.email;
-      const result = await walletCollection.find({ userEmail: email }).toArray();
+      const result = await walletCollection
+        .find({ userEmail: email })
+        .toArray();
       res.send(result);
     });
 
@@ -510,6 +558,8 @@ app.get("/", (req, res) => {
   res.send("Expense Tracker server is working");
 });
 
-app.listen(port, () => {
-  console.log(`Expense Tracker is listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Expense Tracker is listening on port ${port}`);
+// });
+
+module.exports = app;

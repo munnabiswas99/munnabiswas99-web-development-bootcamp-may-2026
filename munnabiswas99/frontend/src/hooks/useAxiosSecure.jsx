@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 import { useNavigate } from "react-router";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://expense-tracker-backend-phi-gray.vercel.app",
 });
 
 const useAxiosSecure = () => {

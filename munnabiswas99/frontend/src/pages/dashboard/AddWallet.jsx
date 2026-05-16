@@ -163,7 +163,7 @@ const AddWallet = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-gray-700 hover:bg-gray-600 transition text-white py-3 rounded-xl font-semibold text-lg cursor-pointer"
+          className="w-full bg-secondary hover:bg-primary transition text-white py-3 rounded-xl font-semibold text-lg cursor-pointer"
         >
           Add Wallet
         </button>

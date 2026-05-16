@@ -69,7 +69,7 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         {/* Left Side */}
-        <div className="hidden lg:flex flex-col justify-center bg-green-600 p-12">
+        <div className="hidden lg:flex flex-col justify-center bg-primary p-12">
           <div className="mb-6">
             <Logo></Logo>
           </div>
@@ -85,7 +85,7 @@ const Register = () => {
         {/* Right Side */}
         <div className="p-8 md:p-12">
           <div className="mb-8 text-center">
-            <div className="flex flex-col items-center lg:hidden mb-4 bg-green-600 rounded-2xl p-5">
+            <div className="flex flex-col items-center lg:hidden mb-4 bg-primary rounded-2xl p-5">
               <div>
                 <Logo />
               </div>
@@ -220,7 +220,7 @@ const Register = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl mt-3"
+              className="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 rounded-xl mt-3 cursor-pointer"
             >
               SignUp
             </button>
@@ -229,7 +229,7 @@ const Register = () => {
           {/* Footer */}
           <p className="text-center text-gray-500 text-sm mt-6">
             Already have an account?
-            <NavLink to="/login" className="text-green-600 font-medium ml-2">
+            <NavLink to="/login" className="text-primary font-medium ml-2">
                 Login
             </NavLink>
           </p>
